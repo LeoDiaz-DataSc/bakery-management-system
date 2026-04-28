@@ -1,0 +1,107 @@
+DICCIONARIO DE DATOS - BASE DE DATOS PANADERÍA
+
+---
+
+1. TABLA: productos
+- ID_PRODUCTO: INT, PK, autoincremental
+- Nom_Producto: VARCHAR(100), único, no nulo
+- descripcion: TEXT
+- Precio_Unidad: DECIMAL(10,2), no nulo
+- Stock_Disponible: INT, por defecto 0
+- Fecha_Vencimiento: DATE
+- Estado: ENUM('activo', 'inactivo'), por defecto 'activo'
+- ID_Categoria: INT, FK -> categorias(ID_Categoria)
+
+2. TABLA: ingredientes
+- ID_Ingrediente: INT, PK, autoincremental
+- Nom_Ingrediente: VARCHAR(100), único, no nulo
+- Unidad_Med: VARCHAR(20)
+- Costo_Unidad: DECIMAL(10,2)
+- Stock_Actual: INT, por defecto 0
+- Stock_Minimo: INT, por defecto 5
+- ID_Proveedor: INT, FK -> proveedores(ID_Proveedor)
+
+3. TABLA: recetas
+- ID_Receta: INT, PK, autoincremental
+- ID_Producto: INT, FK -> productos(ID_PRODUCTO)
+- ID_Ingrediente: INT, FK -> ingredientes(ID_Ingrediente)
+- Cantidad_Necesaria: DECIMAL(10,2), no nulo
+- Instrucciones_Adicionales: TEXT
+- UNIQUE (ID_Producto, ID_Ingrediente)
+
+4. TABLA: categorias
+- ID_Categoria: INT, PK, autoincremental
+- Nombre_Categoria: VARCHAR(50), único, no nulo
+
+5. TABLA: proveedores
+- ID_Proveedor: INT, PK, autoincremental
+- Nombre_Proveedor: VARCHAR(100), no nulo
+- Contacto: VARCHAR(100)
+- Telefono: VARCHAR(20)
+- Email: VARCHAR(100)
+- Direccion: VARCHAR(255)
+
+6. TABLA: ventas
+- ID_Venta: INT, PK, autoincremental
+- Fecha_Venta: DATETIME, por defecto CURRENT_TIMESTAMP
+- Total: DECIMAL(10,2), no nulo
+- Metodo_Pago: ENUM('efectivo', 'tarjeta', 'transferencia')
+- Cliente: VARCHAR(100)
+
+7. TABLA: detalles_venta
+- ID_Detalle: INT, PK, autoincremental
+- ID_Venta: INT, FK -> ventas(ID_Venta)
+- ID_Producto: INT, FK -> productos(ID_PRODUCTO)
+- Cantidad: INT, no nulo
+- Precio_Unitario: DECIMAL(10,2), no nulo
+- Subtotal: DECIMAL(10,2), no nulo
+
+8. TABLA: compras
+- ID_Compra: INT, PK, autoincremental
+- ID_Proveedor: INT, FK -> proveedores(ID_Proveedor)
+- Fecha_Compra: DATETIME, por defecto CURRENT_TIMESTAMP
+- Total: DECIMAL(10,2), no nulo
+
+9. TABLA: detalles_compra
+- ID_DetalleCompra: INT, PK, autoincremental
+- ID_Compra: INT, FK -> compras(ID_Compra)
+- ID_Ingrediente: INT, FK -> ingredientes(ID_Ingrediente)
+- Cantidad: DECIMAL(10,2), no nulo
+- Precio_Unitario: DECIMAL(10,2), no nulo
+- Subtotal: DECIMAL(10,2), no nulo
+
+10. TABLA: costos_produccion
+- ID_CostoProduccion: INT, PK, autoincremental
+- ID_Producto: INT, FK -> productos(ID_PRODUCTO)
+- Costo_Total: DECIMAL(10,2), no nulo
+- Fecha_Calculo: DATETIME, por defecto CURRENT_TIMESTAMP
+
+11. TABLA: usuarios
+- ID_Usuario: INT, PK, autoincremental
+- Nombre: VARCHAR(50), no nulo
+- Apellido: VARCHAR(50), no nulo
+- Correo: VARCHAR(100), único
+- Contrasena: VARCHAR(255)
+- Rol: ENUM('admin', 'empleado', 'inventario'), por defecto 'empleado'
+
+---
+
+RELACIONES CLAVE FORÁNEA:
+- productos.ID_Categoria -> categorias.ID_Categoria
+- ingredientes.ID_Proveedor -> proveedores.ID_Proveedor
+- recetas.ID_Producto -> productos.ID_PRODUCTO
+- recetas.ID_Ingrediente -> ingredientes.ID_Ingrediente
+- detalles_venta.ID_Venta -> ventas.ID_Venta
+- detalles_venta.ID_Producto -> productos.ID_PRODUCTO
+- compras.ID_Proveedor -> proveedores.ID_Proveedor
+- detalles_compra.ID_Compra -> compras.ID_Compra
+- detalles_compra.ID_Ingrediente -> ingredientes.ID_Ingrediente
+- costos_produccion.ID_Producto -> productos.ID_PRODUCTO
+
+---
+
+NOTAS:
+- Todos los campos PK son autoincrementales.
+- Los campos DECIMAL(10,2) se usan para montos monetarios.
+- Las tablas de detalle (detalles_venta, detalles_compra) almacenan los movimientos de productos e ingredientes.
+- El campo Cliente en ventas es opcional y se agregó después del diseño inicial. 
