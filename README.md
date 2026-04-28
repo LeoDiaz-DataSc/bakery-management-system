@@ -1,152 +1,151 @@
-# 🍞 Bakery Management System — Sistema de Gestión de Panadería
+# Bakery Management System
 
 [![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)](https://openjdk.org/)
 [![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?logo=apachemaven)](https://maven.apache.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-A full-featured **Bakery Management System** built with Java Swing that manages products, ingredients, recipes, sales, purchases, production costs, and user authentication with role-based access control.
+## Overview
 
----
+This project implements a comprehensive bakery management system as a desktop application built with Java Swing. The system provides complete operational coverage including product inventory, ingredient tracking, recipe management, point-of-sale operations, supplier procurement, production cost analysis, and multi-role user authentication. The graphical interface leverages the FlatLaf Look and Feel framework and integrates JFreeChart for real-time statistical dashboard rendering.
 
-## 📸 Screenshots
+## System Architecture
 
-> _Screenshots coming soon — the application features a modern FlatLaf Look & Feel with a dashboard, product management, sales tracking, and production cost analysis._
+The application follows a layered architecture with clear separation of concerns:
 
----
+```
+Presentation Layer       GUI panels (Swing + FlatLaf)
+Business Logic Layer     Event-driven data synchronization (Observer pattern)
+Data Access Layer        DAO classes with prepared statements
+Infrastructure Layer     MySQL connection management (Singleton)
+```
 
-## 🎯 Features
+### Design Patterns
 
-### Core Modules
+| Pattern | Implementation | Purpose |
+|---------|---------------|---------|
+| **MVC** | `model/` + `gui/` + `util/` packages | Separation of domain logic, presentation, and data access |
+| **DAO** | `UsuarioDAO.java`, inline DAO operations | Abstraction of database operations from business logic |
+| **Observer** | `DataChangeListener`, `DataChangeNotifier`, `DataChangedEvent` | Real-time UI synchronization across panels |
+| **Singleton** | `ConexionDB.java` | Single database connection instance |
+
+## Functional Modules
+
 | Module | Description |
 |--------|-------------|
-| 🔐 **Authentication** | Login system with 3 roles: `admin`, `employee`, `inventory` |
-| 📊 **Dashboard** | Real-time statistics and JFreeChart visualizations |
-| 🍰 **Products** | Full CRUD for bakery products with categories |
-| 🥚 **Ingredients** | Ingredient inventory management with minimum stock alerts |
-| 📋 **Recipes** | Link products to ingredients with quantity requirements |
-| 🏷️ **Categories** | Product categorization |
-| 🚚 **Suppliers** | Supplier contact and delivery management |
-| 💰 **Sales** | Point of sale with payment method tracking |
-| 🛒 **Purchases** | Ingredient procurement from suppliers |
-| 📈 **Production Costs** | Automated cost calculation per product |
-| 👥 **Users** | User management panel (admin only) |
+| **Authentication** | Login with 3 roles: `admin`, `empleado`, `inventario` |
+| **Dashboard** | JFreeChart visualizations: revenue metrics, inventory status |
+| **Products** | CRUD with categories, stock tracking, expiration dates |
+| **Ingredients** | Inventory with minimum stock alerts and unit pricing |
+| **Recipes** | Product-ingredient linkage with quantity requirements |
+| **Categories** | Product classification taxonomy |
+| **Suppliers** | Supplier directory and contact management |
+| **Sales** | Point-of-sale with payment method tracking |
+| **Purchases** | Ingredient procurement from suppliers |
+| **Production Costs** | Automated cost computation per product |
+| **User Administration** | User management (admin-only) |
 
-### Architecture & Design Patterns
-- **MVC Pattern** — Model, View, Controller separation
-- **DAO Pattern** — Data Access Objects for database operations
-- **Observer Pattern** — `DataChangeListener` / `DataChangeNotifier` for real-time UI sync
-- **Singleton** — Database connection management
-- **Modern UI** — FlatLaf Look & Feel for a polished interface
+## Technology Stack
 
----
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Language | Java | 21 |
+| Build | Apache Maven | 3.x |
+| GUI | Swing + FlatLaf | 3.2.1 |
+| Charts | JFreeChart | 1.5.4 |
+| Database | MySQL | 8.0 |
+| JDBC | mysql-connector-java | 8.0.33 |
 
-## 🛠️ Tech Stack
+## Database Schema
 
-| Layer | Technology |
-|-------|-----------|
-| **Language** | Java 21 |
-| **Build** | Maven |
-| **GUI** | Swing + FlatLaf 3.2.1 |
-| **Charts** | JFreeChart 1.5.4 |
-| **Date Picker** | JCalendar 1.4 |
-| **Database** | MySQL 8.0 |
-| **Connector** | mysql-connector-java 8.0.33 |
+11 tables with full referential integrity: `productos`, `ingredientes`, `recetas`, `categorias`, `proveedores`, `ventas`, `detalles_venta`, `compras`, `detalles_compra`, `costos_produccion`, `usuarios`.
 
----
-
-## 📁 Project Structure
-
-```
-bakery-management-system/
-├── PanaderiaCRUD/
-│   ├── pom.xml
-│   ├── diccionario_datos.txt          # Data dictionary documentation
-│   └── src/main/java/com/mycompany/panaderiacrud/
-│       ├── PanaderiaCRUD.java         # Application entry point
-│       ├── gui/
-│       │   ├── LoginFrame.java        # Authentication window
-│       │   ├── MainFrame.java         # Main application frame
-│       │   ├── DashboardPanel.java    # Statistics & charts
-│       │   ├── ProductosPanel.java    # Products CRUD
-│       │   ├── IngredientesPanel.java # Ingredients CRUD
-│       │   ├── CategoriasPanel.java   # Categories CRUD
-│       │   ├── ProveedoresPanel.java  # Suppliers CRUD
-│       │   ├── RecetasPanel.java      # Recipes management
-│       │   ├── VentasPanel.java       # Sales tracking
-│       │   ├── ComprasPanel.java      # Purchases tracking
-│       │   ├── CostosProduccionPanel.java  # Cost analysis
-│       │   └── UsuariosPanel.java     # User management
-│       ├── model/
-│       │   └── UsuarioDAO.java        # User data access
-│       └── util/
-│           ├── ConexionDB.java        # Database connection
-│           ├── DataChangedEvent.java  # Observer event
-│           ├── DataChangeListener.java # Observer interface
-│           └── DataChangeNotifier.java # Observer notifier
-├── Panaderia.sql                      # Database schema + seed data
-└── README.md
-```
-
----
-
-## 🚀 Getting Started
+## Installation and Execution
 
 ### Prerequisites
-- Java 21 (JDK)
-- Maven 3.x
-- MySQL 8.0
+- JDK 21, Maven 3.x, MySQL 8.0
 
-### 1. Set up the Database
 ```bash
 mysql -u root -p < Panaderia.sql
-```
-
-### 2. Configure Database Connection
-Update `ConexionDB.java` with your MySQL credentials.
-
-### 3. Build & Run
-```bash
 cd PanaderiaCRUD
 mvn clean compile exec:java
 ```
 
----
+## Roadmap
 
-## 📊 Database Schema
-
-**11 tables** with full referential integrity:
-
-| Table | Records | Purpose |
-|-------|---------|---------|
-| `productos` | Products catalog |
-| `ingredientes` | Raw ingredients inventory |
-| `recetas` | Product-ingredient recipes |
-| `categorias` | Product categories |
-| `proveedores` | Supplier directory |
-| `ventas` | Sales transactions |
-| `detalles_venta` | Sale line items |
-| `compras` | Purchase orders |
-| `detalles_compra` | Purchase line items |
-| `costos_produccion` | Production cost tracking |
-| `usuarios` | System users with roles |
-
----
-
-## 🔮 Roadmap
-
-- [ ] Web version with React frontend + Node.js API
+- [ ] Service layer extraction between DAO and GUI
+- [ ] Web frontend (React) with Node.js REST API
 - [ ] Docker containerization
+- [ ] Unit tests (JUnit 5)
+- [ ] BCrypt password hashing
 - [ ] Cloud database migration
-- [ ] REST API documentation
-- [ ] Unit tests (JUnit)
 
----
+## License
 
-## 📄 License
-
-This project is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
-
----
+MIT License. See [LICENSE](./LICENSE).
 
 **Developed by [Leonardo Diaz](https://github.com/LeoDiaz-DataSc)**
+
+---
+
+# Version en Espanol
+
+## Descripcion General
+
+Este proyecto implementa un sistema integral de gestion de panaderia como aplicacion de escritorio construida con Java Swing. Proporciona cobertura operativa completa: inventario de productos, seguimiento de ingredientes, gestion de recetas, punto de venta, adquisiciones de proveedores, analisis de costos de produccion y autenticacion con multiples roles. La interfaz grafica utiliza FlatLaf e integra JFreeChart para dashboards estadisticos en tiempo real.
+
+## Arquitectura del Sistema
+
+Arquitectura por capas con separacion de responsabilidades:
+
+```
+Capa de Presentacion         Paneles GUI (Swing + FlatLaf)
+Capa de Logica de Negocio    Sincronizacion por eventos (patron Observer)
+Capa de Acceso a Datos       Clases DAO con sentencias preparadas
+Capa de Infraestructura      Gestion de conexion MySQL (Singleton)
+```
+
+### Patrones de Diseno
+
+| Patron | Implementacion | Proposito |
+|--------|---------------|-----------|
+| **MVC** | Paquetes `model/` + `gui/` + `util/` | Separacion de dominio, presentacion y acceso a datos |
+| **DAO** | `UsuarioDAO.java` | Abstraccion de operaciones de base de datos |
+| **Observador** | `DataChangeListener`, `DataChangeNotifier` | Sincronizacion de UI en tiempo real |
+| **Singleton** | `ConexionDB.java` | Instancia unica de conexion |
+
+## Modulos Funcionales
+
+| Modulo | Descripcion |
+|--------|-------------|
+| **Autenticacion** | Login con 3 roles: `admin`, `empleado`, `inventario` |
+| **Dashboard** | Visualizaciones JFreeChart: metricas de ingresos, estado de inventario |
+| **Productos** | CRUD con categorias, seguimiento de stock, fechas de vencimiento |
+| **Ingredientes** | Inventario con alertas de stock minimo |
+| **Recetas** | Vinculacion producto-ingrediente con cantidades |
+| **Ventas** | Punto de venta con metodos de pago |
+| **Compras** | Adquisicion de ingredientes de proveedores |
+| **Costos de Produccion** | Computo automatizado de costos por producto |
+| **Administracion de Usuarios** | Gestion de usuarios (solo administradores) |
+
+## Instalacion y Ejecucion
+
+### Requisitos Previos
+- JDK 21, Maven 3.x, MySQL 8.0
+
+```bash
+mysql -u root -p < Panaderia.sql
+cd PanaderiaCRUD
+mvn clean compile exec:java
+```
+
+## Hoja de Ruta
+
+- [ ] Capa de servicio entre DAO y GUI
+- [ ] Frontend web (React) con API REST Node.js
+- [ ] Contenedorizacion con Docker
+- [ ] Pruebas unitarias (JUnit 5)
+- [ ] Hashing BCrypt para contrasenas
+- [ ] Migracion a base de datos en la nube
+
+**Desarrollado por [Leonardo Diaz](https://github.com/LeoDiaz-DataSc)**
