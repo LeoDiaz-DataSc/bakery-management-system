@@ -84,7 +84,7 @@ mvn clean compile exec:java
 
 MIT License. See [LICENSE](./LICENSE).
 
-**Developed by [Leonardo Diaz](https://github.com/LeoDiaz-DataSc)**
+**Developed by [Diego Leobardo Diaz Hernandez](https://github.com/LeoDiaz-DataSc)**
 
 ---
 
@@ -148,4 +148,4 @@ mvn clean compile exec:java
 - [ ] Hashing BCrypt para contrasenas
 - [ ] Migracion a base de datos en la nube
 
-**Desarrollado por [Leonardo Diaz](https://github.com/LeoDiaz-DataSc)**
+**Desarrollado por [Diego Leobardo Diaz Hernandez](https://github.com/LeoDiaz-DataSc)**
