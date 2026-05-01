@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: panaderia_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: panaderia
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database/Panaderia.sql:/docker-entrypoint-initdb.d/1_schema.sql
+
+  backend:
+    build: 
+      context: ./backend
+    container_name: panaderia_backend
+    ports:
+      - "3001:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=panaderia
+      - PORT=3000
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: panaderia_frontend
+    ports:
+      - "5174:80"
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+    depends_on:
+      - backend
