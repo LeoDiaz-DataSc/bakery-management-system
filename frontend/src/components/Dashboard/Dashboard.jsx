@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getProductos, getVentas, getInventario } from '../../services/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(useGSAP);
 
 export default function Dashboard() {
     const [stats, setStats] = useState({ ventas: 0, productos: 0, ingresos: 0 });
     const [loading, setLoading] = useState(true);
+    const container = useRef();
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -34,6 +39,32 @@ export default function Dashboard() {
         fetchDashboardData();
     }, []);
 
+    useGSAP(() => {
+        if (!loading) {
+            const tl = gsap.timeline();
+            tl.from('.page-title, .page-subtitle', {
+                y: -30,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out'
+            })
+            .from('.metric-card', {
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.15,
+                ease: 'back.out(1.7)'
+            }, "-=0.4")
+            .from('.chart-card', {
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.5,
+                ease: 'power2.out'
+            }, "-=0.2");
+        }
+    }, { dependencies: [loading], scope: container });
+
     if (loading) return <div className="loading-spinner"><div className="spinner"></div></div>;
 
     const dummyData = [
@@ -47,12 +78,12 @@ export default function Dashboard() {
     ];
 
     return (
-        <div className="dashboard-container">
+        <div className="dashboard-container" ref={container}>
             <h1 className="page-title">Dashboard Panadería</h1>
             <p className="page-subtitle">Resumen General de Operaciones</p>
 
             <div className="grid-container" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-                <div className="card">
+                <div className="card metric-card">
                     <div className="card-header">
                         <h2 className="card-title">Ventas Totales</h2>
                     </div>
@@ -60,7 +91,7 @@ export default function Dashboard() {
                         {stats.ventas}
                     </div>
                 </div>
-                <div className="card">
+                <div className="card metric-card">
                     <div className="card-header">
                         <h2 className="card-title">Ingresos Acumulados</h2>
                     </div>
@@ -68,7 +99,7 @@ export default function Dashboard() {
                         ${stats.ingresos.toFixed(2)}
                     </div>
                 </div>
-                <div className="card">
+                <div className="card metric-card">
                     <div className="card-header">
                         <h2 className="card-title">Productos Activos</h2>
                     </div>
@@ -78,7 +109,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="card" style={{ marginTop: '2rem' }}>
+            <div className="card chart-card" style={{ marginTop: '2rem' }}>
                 <div className="card-header">
                     <h2 className="card-title">Ventas de la Semana</h2>
                 </div>

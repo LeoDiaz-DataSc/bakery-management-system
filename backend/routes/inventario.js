@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
+const { verifyToken } = require('../middleware/auth');
+const logAction = require('../middleware/audit');
+
+// Protegemos todas las rutas
+router.use(verifyToken);
 
 // GET all ingredients with providers
 router.get('/', async (req, res, next) => {
